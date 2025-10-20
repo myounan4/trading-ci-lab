@@ -1,6 +1,6 @@
 # trading-ci-lab
 
-Minimal daily-bar backtester focused on **testing & CI** (PnL is not the goal).
+Minimal daily-bar backtester focused on testing & CI
 
 ## Setup
 ```bash
