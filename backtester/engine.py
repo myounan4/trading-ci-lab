@@ -27,9 +27,19 @@ class Backtester:
             s = prev_sig.iloc[t]
             px = float(prices.iloc[t])
             if s > 0:
-                self.broker.market_order("BUY", self.share_qty, px)
+                # Only buy if we can afford it
+                cost = self.share_qty * px
+                if getattr(self.broker, "cash", 0) >= cost:
+                    self.broker.market_order("BUY", self.share_qty, px)
+                else:
+                    continue
             elif s < 0:
-                self.broker.market_order("SELL", self.share_qty, px)
+                # Only sell if we have enough shares
+                if getattr(self.broker, "position", 0) >= self.share_qty:
+                    self.broker.market_order("SELL", self.share_qty, px)
+                else:
+                    continue
+
 
         final_equity = float(self.broker.cash + self.broker.position * float(prices.iloc[-1]))
         return final_equity
